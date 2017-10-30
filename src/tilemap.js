@@ -33,31 +33,46 @@ export default class Tilemap {
     // Load the map layer data
     // CHEAT: Assume only one layer
     // NOTE: we can use a typed array for better efficiency
-    this.data = new Uint8Array(tilemapData.layers[0].data);
+	tilemapData.layers.forEach((layer)=>{
+		switch(layer.type){
+			case 'tilelayer':
+			  var newLayer= {
+				  name: layer.name,
+				  data: = new Uint8Array(tilemapData.layers[0].data)
+			  }
+			  this.layers.push(newLayer)
+			  break;
+			default :
+			  console.log("unkown layer");
+		}
+		});
+	//this.data = new Uint8Array(tilemapData.layers[0].data);
   }
 
   render(ctx) {
-    for(let y = 0; y < this.mapHeight; y++) {
-      for(let x = 0; x < this.mapWidth; x++) {
-        var tileIndex = this.data[y * this.mapWidth + x];
-        if(tileIndex === 0) continue; // Skip non-existant tiles
-        var tile = this.tiles[tileIndex];
-        if(!tile.image) continue; // Don't draw a non-existant image
-        ctx.drawImage(
-          // The source image
-          tile.image,
-          // The portion of the source image to draw
-          tile.sx,
-          tile.sy,
-          this.tileWidth,
-          this.tileHeight,
-          // Where to draw the tile on-screen
-          x * this.tileWidth,
-          y * this.tileHeight,
-          this.tileWidth,
-          this.tileHeight
-        );
-      }
-    }
+	for (ley layer in this.layers){
+		for(let y = 0; y < this.mapHeight; y++) {
+		  for(let x = 0; x < this.mapWidth; x++) {
+			var tileIndex = this.data[y * this.mapWidth + x];
+			if(tileIndex === 0) continue; // Skip non-existant tiles
+			var tile = this.tiles[tileIndex];
+			if(!tile.image) continue; // Don't draw a non-existant image
+			ctx.drawImage(
+			  // The source image
+			  tile.image,
+			  // The portion of the source image to draw
+			  tile.sx, 
+			  tile.sy,
+			  this.tileWidth,
+			  this.tileHeight,
+			  // Where to draw the tile on-screen
+			  x * this.tileWidth,
+			  y * this.tileHeight,
+			  this.tileWidth,
+			  this.tileHeight
+			);
+		  }
+		}
+	}
   }
 }
